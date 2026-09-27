@@ -12,11 +12,12 @@ from .console.router import Console
 from .dry import DryService
 from .event import EventBus
 from .glue import GlueService
+from .headers import HeaderService
 from .press import PressService
 from .reel import ReelService
 from .state import StateService
 from .steam import SteamService
-from .store import Journal
+from .store import Journal, keys
 from .verdict import BatchRegistry
 from .version import Artifacts, Confirmations, Generations
 from .water import WaterService
@@ -37,6 +38,7 @@ class Services:
     press: PressService
     dry: DryService
     steam: SteamService
+    headers: HeaderService
     glue: GlueService
     cal: CalService
     reel: ReelService
@@ -50,6 +52,7 @@ class Services:
         """Restore every subsystem from the committed part of the stream."""
         self.press.reload()
         self.steam.reload()
+        self.headers.reload()
         self.dry.reload()
         self.glue.reload()
         self.cal.reload()
@@ -70,6 +73,14 @@ def build_services(config: Config) -> Services:
 
     press = PressService(journal, bus, clock, generations, confirmations)
     steam = SteamService(journal, bus, clock, generations, confirmations)
+    headers = HeaderService(
+        journal,
+        bus,
+        clock,
+        generations,
+        confirmations,
+        BatchRegistry(journal, keys.DRAIN_BATCH_PREFIX),
+    )
     dry = DryService(journal, bus, clock, generations, confirmations)
     glue = GlueService(journal, bus, clock, generations, confirmations)
     cal = CalService(journal, bus, clock)
@@ -87,6 +98,7 @@ def build_services(config: Config) -> Services:
             "press": press,
             "dry": dry,
             "steam": steam,
+            "headers": headers,
             "glue": glue,
             "cal": cal,
             "reel": reel,
@@ -114,6 +126,7 @@ def build_services(config: Config) -> Services:
         press=press,
         dry=dry,
         steam=steam,
+        headers=headers,
         glue=glue,
         cal=cal,
         reel=reel,

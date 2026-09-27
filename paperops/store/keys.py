@@ -12,6 +12,10 @@ STEAM_DRAIN = "steam/drain"
 STEAM_VALVE = "steam/valve"
 STEAM_BASELINE = "steam/baseline"
 
+HEADER_PREFIX = "header/"
+HEADERS_SUPPLY = "headers/supply"
+DRAIN_BATCH_PREFIX = "drain/"
+
 GLUE_ROLL = "glue/roll"
 GLUE_PUMP = "glue/pump"
 GLUE_ALARM = "glue/alarm"
@@ -51,3 +55,11 @@ def artifact_key(kind: str, name: str) -> str:
 
 def batch_key(batch_id: str) -> str:
     return BATCH_PREFIX + batch_id
+
+
+def header_key(header_id: str) -> str:
+    return HEADER_PREFIX + header_id
+
+
+def header_baseline_key(header_id: str) -> str:
+    return f"{HEADER_PREFIX}{header_id}/baseline"

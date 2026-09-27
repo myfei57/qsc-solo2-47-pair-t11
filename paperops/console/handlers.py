@@ -274,6 +274,75 @@ def steam_model(console: Any, request: Request) -> Response:
     )
 
 
+def headers_state(console: Any, request: Request) -> Response:
+    return json_response(console.services.headers.view().to_dict())
+
+
+def headers_allocation(console: Any, request: Request) -> Response:
+    headers = console.services.headers
+    view = headers.view()
+    return json_response(
+        {
+            "supply": view.supply,
+            "demand": view.demand,
+            "oversubscribed": view.oversubscribed,
+            "fair_share": headers.fair_share(),
+            "allocation": headers.allocation(),
+            "headers": [dict(row) for row in view.headers],
+        }
+    )
+
+
+def headers_drains(console: Any, request: Request) -> Response:
+    header_id = request.param("header")
+    drains = console.services.headers.drains(header_id)
+    return json_response(
+        {
+            "header": header_id,
+            "count": len(drains),
+            "drains": [dict(row) for row in drains],
+        }
+    )
+
+
+def headers_pressure(console: Any, request: Request) -> Response:
+    headers = console.services.headers
+    header_id = request.param("header", "") or ""
+    baseline = headers.baseline(header_id)
+    reference = 0.0 if baseline is None else float(baseline["baseline"])
+    reading = request.number("reading", reference)
+    return json_response(
+        {
+            "header_id": header_id,
+            "verdict": headers.pressure_of(header_id, reading),
+            "offset": headers.offset_of(header_id, reading),
+            "baseline": reference,
+            "generation": headers.generation(header_id),
+            "history": headers.history(header_id).to_dict(),
+        }
+    )
+
+
+def headers_model(console: Any, request: Request) -> Response:
+    headers = console.services.headers
+    capacity = request.number("capacity", headers.supply())
+    return json_response(
+        {
+            "demands": headers.demands(),
+            "allocation": headers.allocate_for(capacity),
+            "fair_share": headers.fair_share(capacity),
+            "shortfall": headers.shortfall(
+                request.number("demand", 0.0), request.number("granted", 0.0)
+            ),
+            "band": headers.verify_band(request.number("pressure", 6.0), "header baseline"),
+            "window": headers.window_verdict(
+                request.number("offset", 0.0), request.number("threshold", 0.15)
+            ),
+            "supply": headers.supply(),
+        }
+    )
+
+
 def glue_state(console: Any, request: Request) -> Response:
     return json_response(console.services.glue.view().to_dict())
 

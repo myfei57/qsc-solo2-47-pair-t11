@@ -12,6 +12,13 @@ TOPIC_STEAM_VALVE = "steam.valve.changed"
 TOPIC_STEAM_BASELINE_SET = "steam.baseline.set"
 TOPIC_STEAM_BASELINE_INVALIDATED = "steam.baseline.invalidated"
 
+TOPIC_HEADER_REGISTERED = "header.registered"
+TOPIC_HEADER_DEMAND = "header.demand.changed"
+TOPIC_HEADER_SUPPLY = "header.supply.changed"
+TOPIC_HEADER_DRAINED = "header.drained"
+TOPIC_HEADER_BASELINE_SET = "header.baseline.set"
+TOPIC_HEADER_BASELINE_INVALIDATED = "header.baseline.invalidated"
+
 TOPIC_GLUE_ROLL_LIFTED = "glue.roll.lifted"
 TOPIC_GLUE_PUMP_STOPPED = "glue.pump.stopped"
 TOPIC_GLUE_ALARM = "glue.alarm.changed"
@@ -43,6 +50,12 @@ ALL_TOPICS: tuple[str, ...] = (
     TOPIC_STEAM_VALVE,
     TOPIC_STEAM_BASELINE_SET,
     TOPIC_STEAM_BASELINE_INVALIDATED,
+    TOPIC_HEADER_REGISTERED,
+    TOPIC_HEADER_DEMAND,
+    TOPIC_HEADER_SUPPLY,
+    TOPIC_HEADER_DRAINED,
+    TOPIC_HEADER_BASELINE_SET,
+    TOPIC_HEADER_BASELINE_INVALIDATED,
     TOPIC_GLUE_ROLL_LIFTED,
     TOPIC_GLUE_PUMP_STOPPED,
     TOPIC_GLUE_ALARM,
