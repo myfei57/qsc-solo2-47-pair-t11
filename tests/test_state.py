@@ -14,6 +14,7 @@ def test_view_aggregates_every_subsystem(services):
         "press",
         "dry",
         "steam",
+        "header",
         "glue",
         "cal",
         "reel",

@@ -91,6 +91,8 @@ class StateService:
             topics.TOPIC_DRY_CURVE_SET,
             topics.TOPIC_STEAM_BASELINE_SET,
             topics.TOPIC_STEAM_BASELINE_INVALIDATED,
+            topics.TOPIC_HEADER_BASELINE_SET,
+            topics.TOPIC_HEADER_BASELINE_INVALIDATED,
             topics.TOPIC_GLUE_CONC_SET,
             topics.TOPIC_WATER_MAP,
         ):

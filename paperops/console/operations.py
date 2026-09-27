@@ -158,6 +158,44 @@ def steam_gauge(console: Any, request: Request) -> Response:
     return json_response({"generation": console.services.steam.replace_gauge()})
 
 
+def header_declare(console: Any, request: Request) -> Response:
+    body = request.body()
+    return json_response(console.services.header.declare(body["name"], body["demand"]))
+
+
+def header_supply(console: Any, request: Request) -> Response:
+    return json_response(console.services.header.set_supply(request.body()["supply"]))
+
+
+def header_draw(console: Any, request: Request) -> Response:
+    body = request.body()
+    return json_response(console.services.header.report_draw(body["name"], body["draw"]))
+
+
+def header_drain(console: Any, request: Request) -> Response:
+    body = request.body()
+    return json_response(
+        console.services.header.drain(
+            body["name"], body["batch_id"], body.get("volume", 0.0)
+        )
+    )
+
+
+def header_calibrate(console: Any, request: Request) -> Response:
+    body = request.body()
+    return json_response(
+        console.services.header.calibrate(
+            body["name"], body["pressure"], body["confirmation_id"]
+        )
+    )
+
+
+def header_gauge(console: Any, request: Request) -> Response:
+    return json_response(
+        {"generation": console.services.header.replace_gauge(request.body()["name"])}
+    )
+
+
 def glue_roll(console: Any, request: Request) -> Response:
     body = request.body()
     if body.get("lifted", True):

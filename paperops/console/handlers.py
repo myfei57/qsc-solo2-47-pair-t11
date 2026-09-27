@@ -274,10 +274,42 @@ def steam_model(console: Any, request: Request) -> Response:
     )
 
 
+def header_state(console: Any, request: Request) -> Response:
+    supply = request.param("supply")
+    view = console.services.header.view(None if supply is None else float(supply))
+    return json_response(view.to_dict())
+
+
+def header_drains(console: Any, request: Request) -> Response:
+    header = console.services.header
+    name = request.param("name")
+    entries = header.drains(name) if name is not None else header.drain_entries()
+    return json_response(
+        {"count": len(entries), "drains": [dict(entry) for entry in entries]}
+    )
+
+
+def header_model(console: Any, request: Request) -> Response:
+    header = console.services.header
+    supply = request.number("supply", 10.0)
+    demand = request.number("demand", 6.0)
+    total = request.number("total_demand", 10.0)
+    share = header.fair_share(supply, demand, total)
+    return json_response(
+        {
+            "fair_share": share,
+            "verdict": header.grab_verdict(share, request.number("draw", share)),
+            "deficit": header.pressure_deficit(
+                request.number("main", 8.0), request.number("header", 6.0)
+            ),
+            "declared": list(header.declared()),
+            "supply": header.supply(),
+        }
+    )
+
+
 def glue_state(console: Any, request: Request) -> Response:
     return json_response(console.services.glue.view().to_dict())
-
-
 def glue_model(console: Any, request: Request) -> Response:
     glue = console.services.glue
     reading = request.number("reading", glue.concentration())
